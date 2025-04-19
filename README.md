@@ -10,6 +10,15 @@ Customer churn is a key business metric for subscription-based companies. By ana
 
 ---
 
+## 🌐 Live Demo
+
+Try the live version of the app on Streamlit Cloud:  
+👉 [https://hetron-customer-churn-analysis.streamlit.app](https://hetron-customer-churn-analysis.streamlit.app)
+[![View App](https://img.shields.io/badge/Live%20App-Streamlit-blue?logo=streamlit)](https://hetron-customer-churn-analysis.streamlit.app)
+
+
+---
+
 ## 📌 Key Features
 
 - Cleaned and prepared telecom churn dataset (7,000+ records)
