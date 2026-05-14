@@ -1,5 +1,9 @@
-streamlit
-pandas
-scikit-learn
-matplotlib
-seaborn
+streamlit>=1.32
+lightgbm>=4.3
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.4
+plotly>=5.20
+python-dotenv>=1.0
+anthropic>=0.40
+pytest>=7.4

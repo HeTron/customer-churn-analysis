@@ -1,69 +1,92 @@
-# 🔁 Customer Churn Analysis
+# Churn Edge
 
-This project analyzes customer churn using a real-world telecom dataset. The goal is to identify the drivers of churn and build a predictive model to flag high-risk customers. The project combines data cleaning, exploratory analysis, and classification modeling using logistic regression.
+**AI-powered customer churn prediction with revenue-at-risk scoring and Claude-generated retention recommendations.**
 
----
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://hetron-customer-churn-analysis.streamlit.app)
 
-## 🚀 Overview
+## Demo
 
-Customer churn is a key business metric for subscription-based companies. By analyzing behavioral and contractual data, this project helps business teams understand who is likely to churn — and why.
-
----
-
-## 🌐 Live Demo
-
-Try the live version of the app on Streamlit Cloud:  
-👉 [https://hetron-customer-churn-analysis.streamlit.app](https://hetron-customer-churn-analysis.streamlit.app)
-[![View App](https://img.shields.io/badge/Live%20App-Streamlit-blue?logo=streamlit)](https://hetron-customer-churn-analysis.streamlit.app)
-
-
----
-
-## 📌 Key Features
-
-- Cleaned and prepared telecom churn dataset (7,000+ records)
-- EDA of churn trends across contract types, charges, and services
-- Logistic regression model with performance evaluation
-- Feature importance analysis for business decision support
-
----
-
-## 📁 Project Structure
-
-```
-customer-churn-analysis/ 
-├── churn_data.csv # Source dataset 
-├── churn_eda_model.ipynb # Jupyter notebook with EDA + model 
-├── images/ 
-│ └── churn_plots.png # Screenshots for portfolio/README 
-└── README.md # This file
-```
-
----
-
-## 🧠 Tools Used
-
-- Python, Pandas, Matplotlib, Seaborn
-- scikit-learn (modeling + evaluation)
-- Jupyter Notebook
-
----
-
-## 🛠️ How to Run
-
-1. Clone the repo or download the files  
-2. Install required packages:
-
-   ```bash
-   pip install pandas matplotlib seaborn scikit-learn
-   ```
-   ```bash
-   churn_eda_model.ipynb
-   ```
+<!-- TODO: refresh screenshots in images/ to reflect new UI -->
 
 ![Churn Distribution](images/churn_dist.png)
-![Feature Importance](images/churn_feature_importance.png)
-![Confusion Matrix](images/churn_matrix.png)
 
-This project reflects my experience in understanding customer behavior through data. It demonstrates my ability to translate business problems into machine learning workflows that support decision-making.
+## Features
 
+- Interactive cohort EDA — churn rate by contract type, tenure, charges, services, and payment method
+- LightGBM classifier with `class_weight="balanced"` for accurate minority-class prediction
+- Stratified 5-fold cross-validation — true out-of-sample AUC, F1, precision, recall, log-loss
+- 9 engineered features beyond raw columns: `tenure_bucket`, `services_count`, `has_security_addon`, `has_streaming`, `avg_charge_per_month`, `charge_vs_monthly_ratio`, `is_month_to_month`, `is_auto_pay`, `is_fiber`
+- Plotly interactive visualisations — dark AIBC theme, teal accent
+- Claude Sonnet explains each customer's churn risk in plain English and recommends a retention action
+- **Revenue-at-risk scoring** — `expected_loss = MonthlyCharges × churn_proba × 12` per customer
+- **ROI-optimised retention campaign sizing** — sweep campaign size → ROI curve → optimal top-N recommendation
+
+## How it works
+
+```
+IBM Telco CSV (7,043 customers)
+  └─► Clean
+        Coerce TotalCharges · drop 11 blank rows · map Churn Yes/No → 1/0
+  └─► Engineered Features (9 new signals)
+        tenure_bucket · services_count · has_security_addon · has_streaming
+        avg_charge_per_month · charge_vs_monthly_ratio
+        is_month_to_month · is_auto_pay · is_fiber
+  └─► One-hot encoding → feature matrix
+  └─► LightGBM Classifier
+        class_weight=balanced · 300 estimators · depth 6
+  └─► Stratified 5-fold Cross-Validation
+        AUC · Accuracy · Precision · Recall · F1 · Log-loss per fold
+        Out-of-fold probabilities for honest downstream ranking
+  └─► Claude Explanation (Sonnet)
+        Customer profile + top risk factors → plain-English retention rec
+  └─► Revenue-at-risk scoring
+        Expected loss = MonthlyCharges × churn_proba × 12 per customer
+  └─► Campaign Optimizer
+        Sweep campaign size → ROI curve → optimal top-N recommendation
+```
+
+## Tech stack
+
+| Layer | Tech |
+|---|---|
+| UI | Streamlit |
+| Model | LightGBM |
+| Features | pandas, numpy, scikit-learn |
+| Dataset | IBM Telco Churn (public) |
+| Explanation | Claude Sonnet (Anthropic API) |
+| Viz | Plotly |
+| Tests | pytest |
+
+## Local setup
+
+```bash
+git clone https://github.com/HeTron/customer-churn-analysis.git
+cd customer-churn-analysis
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+cp .env.example .env
+# Edit .env — add ANTHROPIC_API_KEY (optional; app works without it)
+
+streamlit run churn_app.py
+```
+
+Open `http://localhost:8501`.
+
+## Tests
+
+```bash
+pytest tests/
+```
+
+## Environment variables
+
+| Variable | Required | Notes |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | No | Predict and Campaign Optimizer pages work without it; only the Claude retention explanation becomes unavailable |
+
+## Disclaimer
+
+This is a portfolio project using the public IBM Telco churn dataset. Not for production use without retraining on real customer data and validating against your own KPIs and business definitions of churn.
