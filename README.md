@@ -8,9 +8,11 @@
 
 ## Demo
 
-<!-- TODO: refresh screenshots in images/ to reflect new UI -->
+![Campaign Optimizer](images/campaign_optimizer.png)
 
-![Churn Distribution](images/churn_dist.png)
+The Campaign Optimizer page scores every customer in the dataset, ranks them by annualised revenue at risk, sweeps campaign size against ROI, and surfaces the optimal top-N to target given your retention cost and intervention success rate.
+
+**[Try the live app →](https://hetron-customer-churn-analysis.streamlit.app)**
 
 ## Features
 
